@@ -1,23 +1,39 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Mini-RAG Frontend
 
-## Getting Started
+**Note:**  
+This is the **frontend part** of an end-to-end Retrieval-Augmented Generation (RAG) web application that allows users to:
 
-First ensure to have an environment file with the backend url. To do so, feel free to copy the `.env.dist` to `.env`. Ensure that the backend URL is correct.
+- Upload PDF or Excel files  
+- Ask questions based on the uploaded content  
+- Get AI-generated answers from a language model based on retrieved context  
 
-Then, run the development server:
+The **backend** is in a separate repository: [Mini-RAG-application](https://github.com/Karim-Bennia/Mini-RAG-application).
+
+---
+
+## Architecture
+
+- **Frontend:** Next.js 15.1 with TypeScript  
+- **Styling:** TailwindCSS with Dark/Light mode support  
+- **Features:** File upload and chat interface  
+
+---
+
+## Environment Variables
+
+The application requires several environment variables to be set. See the file:
+frontend/.env.dist
+
+---
+
+## Setup Instructions
+
+### Set up the frontend
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+cd frontend
+npm install
+cp .env.dist .env
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Edit .env and set:
+NEXT_PUBLIC_BACKEND_URL=http://localhost:5000
