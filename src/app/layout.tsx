@@ -7,7 +7,7 @@ import { Footer } from '@/components/footer';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata = {
-  title: 'Forgent Test',
+  title: 'RAG app',
   description: 'A Next.js application for file management and AI chat',
 };
 

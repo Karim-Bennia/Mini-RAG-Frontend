@@ -1,0 +1,54 @@
+# -----------------------
+# 🔨 Build Stage
+# -----------------------
+  FROM node:18-slim AS build
+
+  # Accept build-time environment variable
+  ARG NEXT_JS_FORCE_WEBPACK
+  ENV NEXT_JS_FORCE_WEBPACK=${NEXT_JS_FORCE_WEBPACK}
+  ENV NEXT_DISABLE_SWC_NATIVE=1
+  
+  # Install dependencies
+  RUN apt-get update && apt-get install -y \
+    python3 \
+    make \
+    g++ \
+    && npm install -g pnpm \
+    && rm -rf /var/lib/apt/lists/*
+  
+  WORKDIR /app
+  
+  # Copy package files and install dependencies
+  COPY package.json package-lock.json ./
+  
+  # Ensure swc fallback is available before clean install
+  RUN npm install @next/swc-wasm-nodejs && npm ci
+  
+  # Copy rest of the app and build it
+  COPY . .
+  RUN npm run build
+  
+  # -----------------------
+  # 🚀 Production Stage
+  # -----------------------
+  FROM node:18-slim AS production
+  
+  ARG NEXT_JS_FORCE_WEBPACK
+  ENV NEXT_JS_FORCE_WEBPACK=${NEXT_JS_FORCE_WEBPACK}
+  ENV NODE_ENV=production
+  ENV NEXT_DISABLE_SWC_NATIVE=1
+  
+  # Optional: Ensure pnpm available if needed
+  RUN npm install -g pnpm || true
+  
+  WORKDIR /app
+  
+  # Copy only necessary production files
+  COPY --from=build /app/package.json ./
+  COPY --from=build /app/node_modules ./node_modules
+  COPY --from=build /app/.next ./.next
+  COPY --from=build /app/public ./public
+  
+  EXPOSE 3000
+  CMD ["npm", "start"]
+  
